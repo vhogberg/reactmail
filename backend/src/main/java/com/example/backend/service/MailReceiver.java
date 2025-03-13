@@ -3,6 +3,8 @@ package com.example.backend.service;
 import com.example.backend.model.Attachment;
 import com.example.backend.model.EmailMessage;
 import jakarta.mail.*;
+import jakarta.mail.internet.MimeBodyPart;
+
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -31,7 +33,7 @@ public class MailReceiver {
         properties.put("mail.imaps.host", host);
         properties.put("mail.imaps.port", port);
         properties.put("mail.imaps.ssl.enable", "true");
-        properties.put("mail.imaps.timeout", "5000");
+        properties.put("mail.imaps.timeout", "10000");
         System.setProperty("mail.imaps.ssl.protocols", "TLSv1.2");
 
         try {
@@ -48,23 +50,29 @@ public class MailReceiver {
             Message[] messages = inbox.getMessages();
             SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy HH:mm");
 
-            // Process the 10 most recent messages (or all if fewer than 10)
+            // get the 10 most recent messages (or all if fewer than 10)
             for (int i = 0; i < Math.min(10, messages.length); i++) {
                 Message message = messages[messages.length - 1 - i];
-
                 EmailMessage emailMessage = new EmailMessage();
+
+                // Set an id based on message number
                 emailMessage.setId(String.valueOf(message.getMessageNumber()));
 
-                // Set sender information
+                // Get sender information
                 Address[] fromAddresses = message.getFrom();
                 if (fromAddresses != null && fromAddresses.length > 0) {
                     emailMessage.setFrom(fromAddresses[0].toString());
                 }
 
-                // Set subject
-                emailMessage.setSubject(message.getSubject() != null ? message.getSubject() : "(No subject)");
+                // Get subject if there is one, else say "no subject"
+                if (message.getSubject() != null) {
+                    emailMessage.setSubject(message.getSubject());
+                }
+                else {
+                    emailMessage.setSubject("No subject");
+                }
 
-                // Set date
+                // Get date
                 Date sentDate = message.getSentDate();
                 if (sentDate != null) {
                     emailMessage.setDate(dateFormat.format(sentDate));
@@ -72,34 +80,33 @@ public class MailReceiver {
                     emailMessage.setDate("Unknown date");
                 }
 
-                // Get content
+                // Get content and attachments if there are any
                 try {
-                    Object content = message.getContent();
-                    if (content instanceof String) {
-                        emailMessage.setBody((String) content);
-                    } else if (content instanceof Multipart) {
-                        Multipart multipart = (Multipart) content;
-                        StringBuilder bodyText = new StringBuilder();
+                    if (message.isMimeType("text/plain")) {
+                        // Simple text email
+                        emailMessage.setBody(message.getContent().toString());
+                    } else if (message.isMimeType("multipart/*")) {
+                        // Email with attachment
+                        Multipart multipart = (Multipart) message.getContent();
                         List<Attachment> attachments = new ArrayList<>();
+                        StringBuilder bodyText = new StringBuilder();
 
-                        for (int j = 0; j < multipart.getCount(); j++) {
-                            BodyPart bodyPart = multipart.getBodyPart(j);
-                            String disposition = bodyPart.getDisposition();
+                        for (int i2 = 0; i2 < multipart.getCount(); i2++) {
+                            MimeBodyPart part = (MimeBodyPart) multipart.getBodyPart(i2);
 
-                            if (disposition != null && (disposition.equalsIgnoreCase(Part.ATTACHMENT) ||
-                                    disposition.equalsIgnoreCase(Part.INLINE))) {
-                                // attachment
+                            if (Part.ATTACHMENT.equalsIgnoreCase(part.getDisposition())) {
+                                // get attachment info
                                 Attachment attachment = new Attachment();
-                                attachment.setName(bodyPart.getFileName());
-                                attachment.setSize(bodyPart.getSize());
-                                attachment.setType(bodyPart.getContentType());
+                                attachment.setName(part.getFileName());
+                                attachment.setType(part.getContentType());
+                                attachment.setSize(part.getSize());
                                 attachments.add(attachment);
-                            } else {
-                                // message body
-                                Object partContent = bodyPart.getContent();
-                                if (partContent instanceof String) {
-                                    bodyText.append(partContent);
+                            } else if (part.getContent() instanceof String) {
+                                // email body when there are attachments too
+                                if (bodyText.length() > 0) {
+                                    bodyText.append("\n\n");
                                 }
+                                bodyText.append(part.getContent().toString());
                             }
                         }
 
@@ -107,11 +114,14 @@ public class MailReceiver {
                         if (!attachments.isEmpty()) {
                             emailMessage.setAttachments(attachments);
                         }
+
+                    } else {
+                        // for safety set with string too so we dont miss some type
+                        emailMessage.setBody(message.getContent().toString());
                     }
                 } catch (Exception e) {
                     emailMessage.setBody("Error! Not able to display message content");
                 }
-
                 emailMessages.add(emailMessage);
             }
 

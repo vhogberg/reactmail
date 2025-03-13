@@ -2,12 +2,13 @@ package com.example.backend.controller;
 
 import com.example.backend.model.CredentialsRequest;
 import com.example.backend.model.EmailMessage;
-import com.example.backend.model.EmailRequest;
 import com.example.backend.service.MailReceiver;
 import com.example.backend.service.MailSender;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,25 +23,39 @@ public class EmailController {
 
     // Sending emails, api request ends with /send-email
     @PostMapping("/send-email")
-    public ResponseEntity<Map<String, String>> sendEmail(@RequestBody EmailRequest request) {
+    public ResponseEntity<Map<String, String>> sendEmail(
+            // swapped to using requestparam instead of the emailrequest class, for convenience and handling files
+            @RequestParam String host,
+            @RequestParam String port,
+            @RequestParam String username,
+            @RequestParam String password,
+            @RequestParam String to,
+            @RequestParam String subject,
+            @RequestParam String body,
+            @RequestParam(required = false) List<MultipartFile> attachments) { // not required to send files
+
         Map<String, String> response = new HashMap<>();
 
-        // Try to send via MailSender
         try {
+            // Convert multipart files to File objects
+            List<File> attachmentFiles = new ArrayList<>();
+            if (attachments != null) {
+                for (MultipartFile multipartFile : attachments) {
+                    File tempFile = File.createTempFile("email-attachment-", multipartFile.getOriginalFilename());
+                    multipartFile.transferTo(tempFile);
+                    attachmentFiles.add(tempFile);
+                }
+            }
+
             MailSender.sendMail(
-                    request.getHost(),
-                    request.getPort(),
-                    request.getUsername(),
-                    request.getPassword(),
-                    request.getTo(),
-                    request.getSubject(),
-                    request.getBody()
+                    host, port, username, password, to, subject, body, attachmentFiles
             );
 
             response.put("status", "success");
             response.put("message", "Email sent successfully");
             return ResponseEntity.ok(response);
-        } catch (Exception e) { // if it didn't work for some reason, err code 500
+
+        } catch (Exception e) {
             response.put("status", "error");
             response.put("message", e.getMessage());
             return ResponseEntity.status(500).body(response);
