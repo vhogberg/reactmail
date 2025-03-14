@@ -71,7 +71,8 @@ public class EmailController {
                     request.getHost(),
                     request.getPort(),
                     request.getUsername(),
-                    request.getPassword()
+                    request.getPassword(),
+                    request.getFolder() // Get folder too
             );
 
             return ResponseEntity.ok(messages);

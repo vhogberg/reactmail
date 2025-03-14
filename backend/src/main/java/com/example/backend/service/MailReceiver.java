@@ -24,7 +24,7 @@ Postman test for receiving emails:
 */
 
 public class MailReceiver {
-    public static List<EmailMessage> receiveMailAsList(String host, String port, String username, String password) throws MessagingException {
+    public static List<EmailMessage> receiveMailAsList(String host, String port, String username, String password, String folderName) throws MessagingException {
         List<EmailMessage> emailMessages = new ArrayList<>();
 
         // e-postserverns inställningar
@@ -42,12 +42,18 @@ public class MailReceiver {
             Store store = session.getStore("imaps");
             store.connect(username, password);
 
-            // öppna inkorgen / "INBOX"
-            Folder inbox = store.getFolder("INBOX");
-            inbox.open(Folder.READ_ONLY);
+            // Open the specified folder (default to INBOX if null/empty)
+            Folder folder;
+            if (folderName != null && !folderName.isEmpty()) {
+                folder = store.getFolder(folderName);
+            }
+            else {
+                folder = store.getFolder("INBOX");
+            }
+            folder.open(Folder.READ_ONLY);
 
             // hämta alla meddelanden
-            Message[] messages = inbox.getMessages();
+            Message[] messages = folder.getMessages();
             SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy HH:mm");
 
             // get the 10 most recent messages (or all if fewer than 10)
@@ -126,7 +132,7 @@ public class MailReceiver {
             }
 
             // stäng anslutningar
-            inbox.close(false);
+            folder.close(false);
             store.close();
 
         } catch (MessagingException e) {

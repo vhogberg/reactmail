@@ -1,23 +1,35 @@
 import React from 'react';
 import "./Sidebar.css";
 
-// Sidebar containing logo, folders, compose button and refresh
-function Sidebar({ onComposeClick, onRefreshClick }) {
+const folderMappings = {
+  Inbox: "INBOX",
+  Sent: "[Gmail]/Sent Mail",
+  Drafts: "[Gmail]/Drafts",
+  Trash: "[Gmail]/Trash",
+  Spam: "[Gmail]/Spam",
+  Starred: "[Gmail]/Starred",
+  Important: "[Gmail]/Important",
+  AllMail: "[Gmail]/All Mail",
+};
+
+
+function Sidebar({ onComposeClick, onRefreshClick, onSelectFolder, selectedFolder }) {
   return (
     <div className="sidebar">
       <h2>React<span id="logo-span">Mail</span></h2>
       <div className="sidebar-menu">
-        <div className="sidebar-item sidebar-item-active">Inbox</div>
-        
-        {/*TODO maybe implement? <div className="sidebar-item">Sent</div>
-        <div className="sidebar-item">Trash</div> */}
+        {Object.keys(folderMappings).map((folder) => (
+          <div
+            key={folder}
+            className={`sidebar-item ${selectedFolder === folderMappings[folder] ? "sidebar-item-active" : ""}`}
+            onClick={() => onSelectFolder(folderMappings[folder])} // Set correct folder format (gmail)
+          >
+            {folder}
+          </div>
+        ))}
       </div>
-      <button className="compose-btn" onClick={onComposeClick}>
-        Compose
-      </button>
-      <button className="refresh-btn" onClick={onRefreshClick}>
-        Refresh
-      </button>
+      <button className="compose-btn" onClick={onComposeClick}>Compose</button>
+      <button className="refresh-btn" onClick={onRefreshClick}>Refresh</button>
     </div>
   );
 }

@@ -8,6 +8,7 @@ import LoginForm from './components/LoginForm/LoginForm';
 import Sidebar from './components/Sidebar/Sidebar';
 
 function App() {
+  // State variables
   const [emails, setEmails] = useState([]);
   const [selectedEmail, setSelectedEmail] = useState(null);
   const [showCompose, setShowCompose] = useState(false);
@@ -21,6 +22,8 @@ function App() {
     password: ''
   });
   const [isEmailListHidden, setIsEmailListHidden] = useState(false);
+  const [selectedFolder, setSelectedFolder] = useState("INBOX");
+
 
   // Show the clicked email
   const handleEmailSelect = (email) => {
@@ -37,7 +40,7 @@ function App() {
   }, [isLoggedIn]);
 
   // method that fetches the emails from api
-  const fetchEmails = async () => {
+  const fetchEmails = async (folder = selectedFolder) => {
     try {
       // localhost currently
       const response = await fetch('http://localhost:8080/api/receive-emails', {
@@ -49,7 +52,8 @@ function App() {
           host: credentials.imapHost,
           port: credentials.imapPort,
           username: credentials.username,
-          password: credentials.password
+          password: credentials.password,
+          folder: folder // inbox, sent, drafts etc.
         }),
       });
 
@@ -73,7 +77,7 @@ function App() {
     try {
       // object for sending both text fields and files
       const formData = new FormData();
-      
+
       // Add text fields
       formData.append('host', credentials.smtpHost);
       formData.append('port', credentials.smtpPort);
@@ -82,7 +86,7 @@ function App() {
       formData.append('to', emailData.to);
       formData.append('subject', emailData.subject);
       formData.append('body', emailData.body);
-      
+
       // Add attachments if there are any
       if (emailData.attachments && emailData.attachments.length > 0) {
         emailData.attachments.forEach(file => {
@@ -117,7 +121,15 @@ function App() {
   return (
     <div className="app">
       <div className="app-container">
-        <Sidebar onComposeClick={() => setShowCompose(true)} onRefreshClick={fetchEmails} />
+        <Sidebar
+          onComposeClick={() => setShowCompose(true)}
+          onRefreshClick={fetchEmails}
+          onSelectFolder={(folder) => {
+            setSelectedFolder(folder);
+            fetchEmails(folder); // Refresh emails when changing folder
+          }}
+          selectedFolder={selectedFolder}
+        />
 
         <div className="main-content">
           <EmailList

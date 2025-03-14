@@ -7,6 +7,7 @@ public class CredentialsRequest {
     private String port; // ex 465, 993
     private String username; // ex viktorhogberg@gmail.com
     private String password; // ex google app password
+    private String folder;
 
     // Getters and setters
     public String getHost() {
@@ -39,5 +40,13 @@ public class CredentialsRequest {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getFolder() {
+        return folder;
+    }
+
+    public void setFolder() {
+        this.folder = folder;
     }
 }
