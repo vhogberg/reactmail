@@ -1,0 +1,76 @@
+/* Email view CSS styling */
+.email-view {
+    flex-grow: 1;
+    background-color: #fff;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.email-view-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.email-view-header h3 {
+    font-size: 1.25rem;
+    color: #202124;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #5f6368;
+}
+
+.email-view-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.email-view-sender {
+    color: #202124;
+}
+
+.email-view-date {
+    color: #5f6368;
+    font-size: 0.875rem;
+}
+
+.email-view-body {
+    padding: 10px 0;
+    color: #202124;
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+
+.email-view-attachments {
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.email-view-attachments h4 {
+    margin-bottom: 10px;
+    color: #202124;
+}
+
+.attachment-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.attachment-item {
+    background-color: #f1f3f4;
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 0.875rem;
+    color: #202124;
+}
