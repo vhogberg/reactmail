@@ -1,5 +1,4 @@
 /* CSS for the compose popup for when composing an email */
-
 .compose-overlay {
     position: fixed;
     top: 0;
@@ -8,131 +7,176 @@
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.5);
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: flex-end;
+    align-items: flex-end;
     z-index: 1000;
+    backdrop-filter: blur(2px);
 }
 
 .compose-container {
     background-color: white;
-    width: 80%;
-    max-width: 700px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    width: 90%;
+    max-width: 800px;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    box-shadow: var(--shadow-lg);
     display: flex;
     flex-direction: column;
     max-height: 90vh;
+    margin-right: 1.5rem;
+    margin-bottom: 0;
+    animation: slide-up 0.2s ease;
+}
+
+/* slide up animation */
+@keyframes slide-up {
+    from {
+        transform: translateY(100%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
 }
 
 .compose-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 20px;
-    border-bottom: 1px solid #eaeaea;
+    padding: 1rem 1.3rem;
+    border-bottom: 1px solid var(--border-color);
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    background-color: var(--primary-light);
 }
 
 .compose-header h3 {
     margin: 0;
-    color: #333;
+    color: var(--primary-color);
+    font-size: 1rem;
+    font-weight: 500;
 }
 
 .close-button {
     background: none;
     border: none;
-    font-size: 24px;
+    font-size: 1.4rem;
     cursor: pointer;
-    color: #555;
+    color: var(--text-secondary);
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    transition: var(--transition);
+}
+
+.close-button:hover {
+    background-color: rgba(95, 99, 104, 0.12);
+    color: var(--text-primary);
 }
 
 .compose-field {
     display: flex;
-    padding: 10px 20px;
-    border-bottom: 1px solid #eaeaea;
+    padding: 0.6rem 1.25rem;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .compose-field label {
     width: 80px;
-    color: #555;
+    color: var(--text-secondary);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
 }
 
 .compose-field input {
     flex: 1;
     border: none;
     outline: none;
-    font-size: 14px;
+    font-size: 15px;
+    color: var(--text-primary);
 }
 
 .compose-body {
     flex: 1;
     padding: 0 20px;
-    max-height: 40vh;
+    max-height: 50vh;
     overflow-y: auto;
 }
 
 .compose-body textarea {
     width: 100%;
-    height: 200px;
+    height: 220px;
     border: none;
     outline: none;
     resize: vertical;
-    padding: 10px 0;
-    font-size: 14px;
-    font-family: Arial, sans-serif;
+    padding: 1rem 0;
+    font-size: 15px;
+    font-family: inherit;
+    color: var(--text-primary);
 }
 
 .compose-actions {
-    padding: 15px 20px;
-    border-top: 1px solid #eaeaea;
+    padding: 1rem 1.25rem;
+    border-top: 1px solid var(--border-color);
     display: flex;
     justify-content: flex-start;
+    gap: 0.7rem;
 }
 
 .send-button {
-    background-color: #1a73e8;
+    background-color: var(--primary-color);
     color: white;
     border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
+    padding: 0.7rem 1.25rem;
+    border-radius: var(--radius-md);
     cursor: pointer;
     font-weight: 500;
+    transition: var(--transition);
 }
 
 .send-button:hover {
-    background-color: #1557b0;
+    background-color: var(--primary-hover);
+    box-shadow: var(--shadow-sm);
 }
 
 /* Attachment styles */
 .compose-attachments {
-    padding: 10px 20px;
-    border-top: 1px solid #eaeaea;
+    padding: 1rem 1.25rem;
+    border-top: 1px solid var(--border-color);
 }
 
 .attachment-list {
-    margin-bottom: 15px;
+    margin-bottom: 1rem;
 }
 
 .attachment-list h4 {
-    margin: 0 0 8px 0;
-    font-size: 14px;
-    color: #555;
+    margin: 0 0 0.65rem 0;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    font-weight: 500;
 }
 
 .attachment-list ul {
     list-style: none;
     padding: 0;
     margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
 }
 
 .attachment-list li {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 5px 10px;
-    background-color: #f2f2f2;
-    border-radius: 4px;
-    margin-bottom: 5px;
-    font-size: 13px;
+    padding: 0.5rem 0.75rem;
+    background-color: var(--background-light);
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    border: 1px solid var(--border-color);
+    transition: var(--transition);
+}
+
+.attachment-list li:hover {
+    background-color: var(--primary-light);
 }
 
 .remove-attachment {
@@ -140,8 +184,16 @@
     border: none;
     color: #d32f2f;
     cursor: pointer;
-    font-weight: bold;
-    margin-left: 10px;
+    font-weight: 500;
+    margin-left: 0.6rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    transition: var(--transition);
+}
+
+.remove-attachment:hover {
+    background-color: rgba(211, 47, 47, 0.1);
 }
 
 .file-upload {
@@ -150,16 +202,20 @@
 }
 
 .file-label {
-    background-color: #f2f2f2;
-    padding: 8px 12px;
-    border-radius: 4px;
+    background-color: var(--background-light);
+    padding: 0.6rem 1rem;
+    border-radius: var(--radius-sm);
     cursor: pointer;
-    font-size: 13px;
-    color: #555;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    gap: 0.5rem;
+    transition: var(--transition);
 }
 
 .file-label:hover {
-    background-color: #e0e0e0;
+    background-color: var(--primary-light);
+    color: var(--primary-color);
 }
 
 .file-input {
