@@ -8,6 +8,9 @@ import jakarta.mail.internet.MimeBodyPart;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import java.io.InputStream;
+import java.io.ByteArrayOutputStream;
+
 // MailReceiver class that retrieves the latest emails in inbox
 
 /*
@@ -106,7 +109,19 @@ public class MailReceiver {
                                 attachment.setName(part.getFileName());
                                 attachment.setType(part.getContentType());
                                 attachment.setSize(part.getSize());
+
+                                // read the attachment content for downloading
+                                InputStream inputStream = part.getInputStream();
+                                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                                byte[] buffer = new byte[4096];
+                                int bytesRead;
+                                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                                    outputStream.write(buffer, 0, bytesRead);
+                                }
+                                // set its content and add to list of total attachments
+                                attachment.setContent(outputStream.toByteArray());
                                 attachments.add(attachment);
+
                             } else if (part.getContent() instanceof String) {
                                 // email body when there are attachments too
                                 if (bodyText.length() > 0) {

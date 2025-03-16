@@ -101,3 +101,24 @@
 .attachment-item:hover {
     background-color: var(--primary-light);
 }
+
+.attachment-item span {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+.download-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 0.3rem 0.7rem;
+    text-align: center;
+    font-size: 0.875rem;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.download-btn:hover {
+    background-color: #45a049;
+}

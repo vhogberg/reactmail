@@ -9,7 +9,7 @@ const folderMappings = {
   Spam: "[Gmail]/Spam",
   Starred: "[Gmail]/Starred",
   Important: "[Gmail]/Important",
-  AllMail: "[Gmail]/All Mail",
+  "All Mail": "[Gmail]/All Mail", // needs to be in quotes for it to be two words
 };
 
 

@@ -6,6 +6,21 @@ import "./EmailView.css";
 // Email view, i.e one selected email
 
 function EmailView({ email, onClose }) {
+
+    // handle attachment download
+    const handleDownload = (attachment) => {
+        // get via api/download-attachment and its id
+        const downloadUrl = `http://localhost:8080/api/download-attachment/${attachment.id}`;
+
+        // create a temporary anchor element
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = attachment.name;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
     return (
         <div className="email-view">
             <div className="email-view-header">
@@ -30,6 +45,12 @@ function EmailView({ email, onClose }) {
                         {email.attachments.map((attachment, index) => (
                             <div key={index} className="attachment-item">
                                 <span>{attachment.name}</span>
+                                <button
+                                    className="download-btn"
+                                    onClick={() => handleDownload(attachment)}
+                                >
+                                    Download
+                                </button>
                             </div>
                         ))}
                     </div>

@@ -9,10 +9,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import com.example.backend.model.Attachment;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 
 // REST API CONTROLLER
 
@@ -20,6 +23,9 @@ import java.util.Map;
 @CrossOrigin(origins = "*") // CORS, for development only
 @RequestMapping("/api")
 public class EmailController {
+
+    // store attachments temporarily in memory for download
+    private static final Map<String, Attachment> attachmentCache = new HashMap<>();
 
     // Sending emails, api request ends with /send-email
     @PostMapping("/send-email")
@@ -41,7 +47,7 @@ public class EmailController {
             List<File> attachmentFiles = new ArrayList<>();
             if (attachments != null) {
                 for (MultipartFile multipartFile : attachments) {
-                    File tempFile = File.createTempFile("email-attachment-", multipartFile.getOriginalFilename());
+                    File tempFile = File.createTempFile("attachment-", multipartFile.getOriginalFilename());
                     multipartFile.transferTo(tempFile);
                     attachmentFiles.add(tempFile);
                 }
@@ -75,10 +81,41 @@ public class EmailController {
                     request.getFolder() // Get folder too
             );
 
+            // get attachments and add them to cache
+            for (EmailMessage message : messages) {
+                if (message.getAttachments() != null) {
+                    for (Attachment attachment : message.getAttachments()) {
+                        // a unique ID for each attachment
+                        String attachmentId = UUID.randomUUID().toString();
+                        attachment.setId(attachmentId);
+
+                        // store in cache
+                        attachmentCache.put(attachmentId, attachment);
+                    }
+                }
+            }
+
             return ResponseEntity.ok(messages);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).body(new ArrayList<>()); // if it didn't work for some reason, err code 500
         }
+    }
+
+    // New get endpoint for downloading attachments
+    @GetMapping("/download-attachment/{id}")
+    public ResponseEntity<byte[]> downloadAttachment(@PathVariable String id) {
+        Attachment attachment = attachmentCache.get(id); // get an attachment via its id
+
+        // if attachment with that id does not exist
+        if (attachment == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType(attachment.getType()));
+        headers.setContentDispositionFormData("attachment", attachment.getName());
+
+        return new ResponseEntity<>(attachment.getContent(), headers, HttpStatus.OK);
     }
 }

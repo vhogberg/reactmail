@@ -2,10 +2,14 @@
 .sidebar {
     width: 220px;
     background-color: #fff;
-    padding: 1.2rem 0.8rem 1.2rem 1rem;
+    padding: 0.3rem 0.8rem 1.2rem 1rem;
     border-right: 1px solid var(--border-color);
     display: flex;
     flex-direction: column;
+}
+
+.sidebar h2 {
+    font-size: 2rem;
 }
 
 #logo-span {

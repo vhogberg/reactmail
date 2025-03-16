@@ -3,11 +3,21 @@ package com.example.backend.model;
 // Model for attachments in emails
 
 public class Attachment {
+    private String id; // unique id, used for attachment downloading
     private String name;
     private String type;
     private long size;
+    private byte[] content; // store attachment content for downloading
 
     // Getters and setters
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -31,5 +41,13 @@ public class Attachment {
 
     public void setSize(long size) {
         this.size = size;
+    }
+
+    public byte[] getContent() {
+        return content;
+    }
+
+    public void setContent(byte[] content) {
+        this.content = content;
     }
 }
