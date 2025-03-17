@@ -36,7 +36,9 @@ public class MailReceiver {
         properties.put("mail.imaps.host", host);
         properties.put("mail.imaps.port", port);
         properties.put("mail.imaps.ssl.enable", "true");
-        properties.put("mail.imaps.timeout", "10000");
+        properties.put("mail.imaps.timeout", "5000");
+        properties.put("mail.imaps.connectiontimeout", "5000");  // connection timeout
+        properties.put("mail.imaps.fetchsize", "1048576");  // size optimization
         System.setProperty("mail.imaps.ssl.protocols", "TLSv1.2");
 
         try {

@@ -1,9 +1,17 @@
 // components/EmailList.js
-import React from 'react';
+import { default as React, useEffect, useState } from 'react';
 import "./EmailList.css";
 
 // component with a list of most recent emails
 function EmailList({ emails, onSelectEmail, selectedEmailId, hidden }) {
+
+    // Dark mode handling
+    const [darkMode, setDarkMode] = useState(
+        window.matchMedia('(prefers-color-scheme: dark)').matches
+    );
+    useEffect(() => {
+        document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light');
+    }, [darkMode]);
 
     if (hidden) return null;
 
@@ -11,6 +19,13 @@ function EmailList({ emails, onSelectEmail, selectedEmailId, hidden }) {
         <div className="email-list">
             <div className="email-list-header">
                 <h2>Inbox</h2>
+                <button
+                    onClick={() => setDarkMode(!darkMode)}
+                    className="theme-toggle"
+                    aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+                >
+                    {darkMode ? '☀️' : '🌙'}
+                </button>
             </div>
             <div className="email-list-items">
                 {(() => {
