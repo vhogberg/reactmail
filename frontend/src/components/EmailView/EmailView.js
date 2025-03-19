@@ -7,6 +7,7 @@ import "./EmailView.css";
 
 function EmailView({ email, onClose }) {
 
+
     // handle attachment download
     const handleDownload = (attachment) => {
         // get via api/download-attachment and its id
@@ -19,6 +20,16 @@ function EmailView({ email, onClose }) {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+    };
+
+    // render HTML content
+    const renderEmailBody = () => {
+        return (
+            <div
+                className="email-html-content"
+                dangerouslySetInnerHTML={{ __html: email.body }}
+            />
+        );
     };
 
     return (
@@ -36,7 +47,7 @@ function EmailView({ email, onClose }) {
                 </div>
             </div>
             <div className="email-view-body">
-                {email.body}
+                {renderEmailBody()}
             </div>
             {email.attachments && email.attachments.length > 0 && (
                 <div className="email-view-attachments">
