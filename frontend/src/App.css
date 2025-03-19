@@ -49,30 +49,6 @@
   --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.6);
 }
 
-/* Theme auto toggle functionality */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --primary-color: #8ab4f8;
-    --primary-hover: #aecbfa;
-    --primary-light: #1f2937;
-    --primary-light-hover: #253141;
-
-    --text-primary: #e8eaed;
-    --text-secondary: #9aa0a6;
-
-    --border-color: #3c4043;
-    --background-color: #121212;
-
-    --scrollbar-color: #5f6368;
-    --scrollbar-background-color: #1f1f1f;
-    --scrollbar-click-color: #606060;
-
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
-    --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.5);
-    --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.6);
-  }
-}
-
 * {
   box-sizing: border-box;
   margin: 0;
