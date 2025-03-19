@@ -7,7 +7,6 @@ import "./EmailView.css";
 
 function EmailView({ email, onClose }) {
 
-
     // handle attachment download
     const handleDownload = (attachment) => {
         // get via api/download-attachment and its id

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import "./LoginForm.css";
 
+// Login form component
+
 function LoginForm({ onLogin }) {
     const [formData, setFormData] = useState({
         // prefill server details
@@ -35,7 +37,7 @@ function LoginForm({ onLogin }) {
     return (
         <div className="login-container">
             <div className="login-form">
-            <h2>React<span id="logo-span">Mail</span></h2>
+                <h2>React<span id="logo-span">Mail</span></h2>
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label>Email Address:</label>
@@ -113,7 +115,6 @@ function LoginForm({ onLogin }) {
                             </div>
                         )}
                     </div>
-
                     <button type="submit" className="login-btn">Login</button>
                 </form>
             </div>
