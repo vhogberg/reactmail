@@ -223,3 +223,24 @@
 .file-input {
     display: none;
 }
+
+.sent-confirmation {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--background-color);
+    color: var(--text-primary);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    opacity: 0;
+    animation: fadeInOut 2s ease-in-out;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translateX(-50%) scale(0.9); }
+    10% { opacity: 1; transform: translateX(-50%) scale(1); }
+    90% { opacity: 1; transform: translateX(-50%) scale(1); }
+    100% { opacity: 0; transform: translateX(-50%) scale(0.9); }
+}

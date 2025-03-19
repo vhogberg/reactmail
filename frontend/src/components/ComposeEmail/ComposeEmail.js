@@ -9,6 +9,8 @@ function ComposeEmail({ onClose, onSend }) {
     const [body, setBody] = useState('');
     const [attachments, setAttachments] = useState([]);
 
+    const [showSent, setShowSent] = useState(false); // State for sent message
+
     const handleSubmit = (e) => {
         e.preventDefault();
         onSend({
@@ -17,6 +19,9 @@ function ComposeEmail({ onClose, onSend }) {
             body,
             attachments
         });
+        // Show "Sent!" confirmation
+        setShowSent(true);
+        setTimeout(() => setShowSent(false), 2000); // Hide after 2 sec
     };
 
     const handleFileChange = (e) => {
@@ -101,6 +106,7 @@ function ComposeEmail({ onClose, onSend }) {
                         <button type="submit" className="send-button">Send</button>
                     </div>
                 </form>
+                {showSent && <div className="sent-confirmation">Sent!</div>}
             </div>
         </div>
     );
