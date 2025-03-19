@@ -3,8 +3,8 @@ package com.example.backend;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-/* SPRING BOOT SERVER
-* Run via: .\mvnw spring-boot:run
+/* SPRING BOOT
+* Run in terminal via: .\mvnw spring-boot:run
 */
 
 @SpringBootApplication

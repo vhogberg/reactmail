@@ -15,9 +15,37 @@ import com.example.backend.model.Attachment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
 
 // REST API CONTROLLER
+
+/*
+Postman test for receiving emails on API:
+
+* POST http://localhost:8080/api/receive-emails
+
+{
+  "host": "imap.gmail.com",
+  "port": "993",
+  "username": "x.x@gmail.com",
+  "password": "xxx",
+  "folder": "INBOX"
+}
+*/
+
+/*
+Postman test for sending an email:
+
+POST http://localhost:8080/api/send-email
+{
+  "host": "smtp.gmail.com",
+  "port": "465",
+  "username": "x.x@gmail.com",
+  "password": "xxx",
+  "to": "y.y@gmail.com",
+  "subject": "ReactMail - Test Email",
+  "body": "This is a test email from ReactMail"
+}
+*/
 
 @RestController
 @CrossOrigin(origins = "*") // CORS, for development only
@@ -30,7 +58,7 @@ public class EmailController {
     // Sending emails, api request ends with /send-email
     @PostMapping("/send-email")
     public ResponseEntity<Map<String, String>> sendEmail(
-            // swapped to using requestparam instead of the emailrequest class, for convenience and handling files
+            // swapped to using requestparam instead of the emailrequest class, for handling files
             @RequestParam String host,
             @RequestParam String port,
             @RequestParam String username,
@@ -53,6 +81,7 @@ public class EmailController {
                 }
             }
 
+            // Use mailsender with given param
             MailSender.sendMail(
                     host, port, username, password, to, subject, body, attachmentFiles
             );
@@ -71,7 +100,7 @@ public class EmailController {
     // Receiving/retrieving emails, api request ends with /receive-emails
     @PostMapping("/receive-emails")
     public ResponseEntity<List<EmailMessage>> receiveEmails(@RequestBody CredentialsRequest request) {
-        // Try retrieve inbox of emails via MailReceiver as a list
+        // Try retrieve set of emails via MailReceiver as a list
         try {
             List<EmailMessage> messages = MailReceiver.receiveMailAsList(
                     request.getHost(),
@@ -102,20 +131,20 @@ public class EmailController {
         }
     }
 
-    // New get endpoint for downloading attachments
+    // Get endpoint for downloading attachments
     @GetMapping("/download-attachment/{id}")
     public ResponseEntity<byte[]> downloadAttachment(@PathVariable String id) {
-        Attachment attachment = attachmentCache.get(id); // get an attachment via its id
+        Attachment attachment = attachmentCache.get(id); // get an attachment via its id from cache
 
         // if attachment with that id does not exist
         if (attachment == null) {
             return ResponseEntity.notFound().build();
         }
 
+        // create HTTP headers for the response
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType(attachment.getType()));
         headers.setContentDispositionFormData("attachment", attachment.getName());
-
         return new ResponseEntity<>(attachment.getContent(), headers, HttpStatus.OK);
     }
 }

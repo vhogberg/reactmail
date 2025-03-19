@@ -1,52 +1,42 @@
 package com.example.backend.model;
 
-// Model for credentials, host, port and username + password
+// Model for credentials, host, port and username + password + folder
 
 public class CredentialsRequest {
-    private String host; // ex smtp.gmail.com, imap.gmail.com
-    private String port; // ex 465, 993
-    private String username; // ex viktorhogberg@gmail.com
-    private String password; // ex google app password
-    private String folder;
+    private final String host; // ex smtp.gmail.com, imap.gmail.com
+    private final String port; // ex 465, 993
+    private final String username; // ex viktorhogberg@gmail.com
+    private final String password; // ex google app password
+    private final String folder; // ex "INBOX"
 
-    // Getters and setters
-    public String getHost() {
-        return host;
+    // constructor
+    public CredentialsRequest(String host, String port, String username, String password, String folder) {
+        this.host = host;
+        this.port = port;
+        this.username = username;
+        this.password = password;
+        this.folder = folder;
     }
 
-    public void setHost(String host) {
-        this.host = host;
+    // Getters (setters not needed)
+    public String getHost() {
+        return host;
     }
 
     public String getPort() {
         return port;
     }
 
-    public void setPort(String port) {
-        this.port = port;
-    }
-
     public String getUsername() {
         return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getFolder() {
         return folder;
     }
 
-    public void setFolder() {
-        this.folder = folder;
-    }
 }

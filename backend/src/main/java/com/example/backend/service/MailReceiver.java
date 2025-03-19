@@ -11,20 +11,7 @@ import java.util.*;
 import java.io.InputStream;
 import java.io.ByteArrayOutputStream;
 
-// MailReceiver class that retrieves the latest emails in inbox
-
-/*
-Postman test for receiving emails:
-
-* POST http://localhost:8080/api/receive-emails
-
-{
-  "host": "imap.gmail.com",
-  "port": "993",
-  "username": "x.x@gmail.com",
-  "password": "xxx"
-}
-*/
+// MailReceiver class that retrieves the latest emails in inbox for given folder
 
 public class MailReceiver {
     public static List<EmailMessage> receiveMailAsList(String host, String port, String username, String password, String folderName) throws MessagingException {
@@ -156,6 +143,7 @@ public class MailReceiver {
             throw e;
         }
 
+        // return list of email messages
         return emailMessages;
     }
 }

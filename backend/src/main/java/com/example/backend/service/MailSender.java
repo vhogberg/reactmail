@@ -11,21 +11,6 @@ import java.util.List;
 
 // MailSender class that sends an email
 
-/*
-Postman test for sending an email:
-
-POST http://localhost:8080/api/send-email
-{
-  "host": "smtp.gmail.com",
-  "port": "465",
-  "username": "x.x@gmail.com",
-  "password": "xxx",
-  "to": "y.y@gmail.com",
-  "subject": "ReactMail - Test Email",
-  "body": "This is a test email from ReactMail"
-}
-*/
-
 public class MailSender {
 
     public static void sendMail(String host, String port, String username, String password,
