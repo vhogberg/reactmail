@@ -2,8 +2,23 @@
 import { default as React, useEffect, useState } from 'react';
 import "./EmailList.css";
 
+// Reverse mapping function to convert "[Gmail]/Trash" to "Trash" etc.
+const getDisplayFolderName = (selectedFolder) => {
+    const reverseMapping = {
+        "INBOX": "Inbox",
+        "[Gmail]/Sent Mail": "Sent",
+        "[Gmail]/Drafts": "Drafts",
+        "[Gmail]/Trash": "Trash",
+        "[Gmail]/Spam": "Spam",
+        "[Gmail]/Starred": "Starred",
+        "[Gmail]/Important": "Important",
+        "[Gmail]/All Mail": "All Mail"
+    };
+    return reverseMapping[selectedFolder] || "Inbox"; // Default to inbox
+};
+
 // component with a list of most recent emails
-function EmailList({ emails, onSelectEmail, selectedEmailId, hidden }) {
+function EmailList({ emails, onSelectEmail, selectedEmailId, hidden, selectedFolder }) {
 
     // Dark mode handling
     const [darkMode, setDarkMode] = useState(
@@ -18,7 +33,7 @@ function EmailList({ emails, onSelectEmail, selectedEmailId, hidden }) {
     return (
         <div className="email-list">
             <div className="email-list-header">
-                <h2>Inbox</h2>
+            <h2>{getDisplayFolderName(selectedFolder)}</h2> {/* Dynamically set h2 title depending on inbox/trash etc */}
                 <button
                     onClick={() => setDarkMode(!darkMode)}
                     className="theme-toggle"

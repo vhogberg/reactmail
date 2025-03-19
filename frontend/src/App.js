@@ -137,6 +137,7 @@ function App() {
             onSelectEmail={handleEmailSelect}
             selectedEmailId={selectedEmail ? selectedEmail.id : null}
             hidden={isEmailListHidden}
+            selectedFolder={selectedFolder} // Pass selected folder name to update h2 title
           />
 
           {selectedEmail && (

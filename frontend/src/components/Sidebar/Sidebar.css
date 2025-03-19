@@ -57,6 +57,7 @@
     background-color: rgba(95, 99, 104, 0.08);
 }
 
+
 .sidebar-item-active {
     background-color: var(--primary-light);
     color: var(--primary-color);
